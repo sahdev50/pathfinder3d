@@ -24,7 +24,7 @@ interface GridState {
   startNode: { row: number; col: number };
   endNode: { row: number; col: number };
   isRunning: boolean;
-  isAnimating: boolean;
+  _isAnimating: boolean;
   isDrawingWalls: boolean;
   animationSpeed: number;
   dimensions: { rows: number; cols: number };
@@ -47,7 +47,7 @@ interface GridState {
   
   // State management
   setIsRunning: (isRunning: boolean) => void;
-  setIsAnimating: (isAnimating: boolean) => void;
+  set_IsAnimating: (_isAnimating: boolean) => void;
   setIsDrawingWalls: (isDrawing: boolean) => void;
   setAnimationSpeed: (speed: number) => void;
 }
@@ -58,7 +58,7 @@ export const useGridStore = create<GridState>((set, get) => ({
   startNode: { row: 0, col: 0 },
   endNode: { row: 14, col: 14 },
   isRunning: false,
-  isAnimating: false,
+  _isAnimating: false,
   isDrawingWalls: false,
   animationSpeed: 10,
   dimensions: { rows: 15, cols: 15 },
@@ -218,8 +218,8 @@ export const useGridStore = create<GridState>((set, get) => ({
   },
 
   visualizePath: async () => {
-  const { grid, startNode, endNode, isRunning, isAnimating, animationSpeed, algorithm } = get();
-  if (isRunning || isAnimating) return;
+  const { grid, startNode, endNode, isRunning, _isAnimating, animationSpeed, algorithm } = get();
+  if (isRunning || _isAnimating) return;
 
   set({ isRunning: true });
   get().clearPath();
@@ -237,7 +237,7 @@ export const useGridStore = create<GridState>((set, get) => ({
 
     const { animationSteps, path } = result;
 
-    set({ isAnimating: true });
+    set({ _isAnimating: true });
 
     for (let i = 0; i < animationSteps.length; i++) {
       if (!get().isRunning) break;
@@ -277,14 +277,14 @@ export const useGridStore = create<GridState>((set, get) => ({
   } catch (err) {
     console.error('Error during visualization:', err);
   } finally {
-    set({ isRunning: false, isAnimating: false });
+    set({ isRunning: false, _isAnimating: false });
   }
 },
 
 
 
   setIsRunning: (isRunning) => set({ isRunning }),
-  setIsAnimating: (isAnimating) => set({ isAnimating }),
+  set_IsAnimating: (_isAnimating) => set({ _isAnimating }),
   setAnimationSpeed: (speed) => set({ animationSpeed: speed }),
   setIsDrawingWalls: (isDrawing) => set({ isDrawingWalls: isDrawing }),
   setAlgorithm: (algorithm) => set({ algorithm }),
