@@ -4,63 +4,15 @@ import Grid from './components/Grid';
 import Sidebar from './components/Sidebar';
 import { useGridStore } from './store/userGridStore';
 import { useEffect } from 'react';
-import { aStar } from './algorithms/aStar';
 
 const App = () => {
-  const { 
-    grid, 
-    startNode, 
-    endNode, 
-    isRunning, 
-    isAnimating,
-    animationSpeed,
-    setIsRunning, 
-    setIsAnimating,
-    clearPath,
+  const {
     initializeGrid 
   } = useGridStore();
 
   useEffect(() => {
     initializeGrid(15, 15);
   }, [initializeGrid]);
-
-  const visualizePath = async () => {
-    if (isRunning) return;
-    
-    setIsRunning(true);
-    clearPath();
-
-    // Run A* algorithm
-    const { path, visitedNodes } = aStar(grid, startNode, endNode);
-
-    // Animation function
-    const animate = async () => {
-      setIsAnimating(true);
-      
-      // Animate visited nodes
-      for (const node of visitedNodes) {
-        if (!isRunning) break;
-        await new Promise(resolve => setTimeout(resolve, 1000 / animationSpeed));
-        const newGrid = [...grid];
-        newGrid[node.row][node.col].isVisited = true;
-        useGridStore.setState({ grid: newGrid });
-      }
-
-      // Animate path
-      for (const node of path) {
-        if (!isRunning) break;
-        await new Promise(resolve => setTimeout(resolve, 500 / animationSpeed));
-        const newGrid = [...grid];
-        newGrid[node.row][node.col].isPath = true;
-        useGridStore.setState({ grid: newGrid });
-      }
-
-      setIsAnimating(false);
-      setIsRunning(false);
-    };
-
-    await animate();
-  };
 
   return (
     <div className="flex h-screen">
