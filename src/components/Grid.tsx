@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGridStore } from '../store/userGridStore';
 import Tile from './Tile';
